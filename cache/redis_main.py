@@ -1,16 +1,20 @@
 import redis
 from redis.commands.search.field import (
     TextField,
-    VectorField
+    VectorField,
+    NumericField
 )
 from redis.commands.search.indexDefinition import (
     IndexDefinition,
     IndexType
 )
+import os
+import numpy as np
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # --- 상수 정의 ---
-REDIS_HOST = "localhost"
-REDIS_PORT = 6379
 REDIS_INDEX_NAME = "faq_cache_index"
 VECTOR_DIMENSION = 384  # 사용할 모델의 차원 (예: all-MiniLM-L6-v2)
 VECTOR_FIELD_NAME = "question_vector"
@@ -18,7 +22,7 @@ METRIC = "COSINE"  # 유사도 측정 기준 (코사인 유사도)
 
 # --- Redis 연결 ---
 try:
-    r = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, decode_responses=True)
+    r = redis.Redis(host=os.getenv("REDIS_HOST"), port=os.getenv("REDIS_PORT"), decode_responses=True)
     r.ping()
     print("Redis에 성공적으로 연결되었습니다.")
 except Exception as e:
