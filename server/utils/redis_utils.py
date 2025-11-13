@@ -11,6 +11,7 @@ from redis.commands.search.indexDefinition import (
 import os
 import numpy as np
 from dotenv import load_dotenv
+import uuid
 
 load_dotenv()
 
@@ -40,7 +41,7 @@ schema = (
     # 3. 질문 임베딩 벡터 (핵심!)
     VectorField(
         VECTOR_FIELD_NAME,
-        "FLAT",  # 간단한 브루트포스 검색 (데이터가 적을 때 좋음)
+        "HNSW",
         {
             "TYPE": "FLOAT32",
             "DIM": VECTOR_DIMENSION,
@@ -68,9 +69,5 @@ def create_index():
     r.ft(REDIS_INDEX_NAME).create_index(
         fields=schema, definition=definition
     )
+
     print(f"'{REDIS_INDEX_NAME}' 인덱스 생성 완료.")
-
-
-# --- 메인 실행 ---
-if __name__ == "__main__":
-    create_index()

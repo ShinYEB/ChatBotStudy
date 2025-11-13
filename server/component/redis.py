@@ -23,7 +23,7 @@ VECTOR_FIELD_NAME = "question_vector"
 REDIS_INDEX_NAME="faq_cache_index"
 
 
-def search_cache(user_query: str, similarity_threshold=0.95):
+def search_cache(user_query: str, similarity_threshold=0.99):
     """
     Redis 캐시에서 유사한 질문을 검색합니다.
     """
@@ -84,4 +84,6 @@ def add_to_cache(question: str, answer: str):
             "question_vector": question_vector,
         },
     )
+    r.expire(key, 3600)
+
     print(f"캐시: 저장 완료 (Key: {key})")

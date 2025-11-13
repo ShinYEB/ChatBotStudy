@@ -1,11 +1,9 @@
 from fastapi import FastAPI
 
-from dto.request.ChatRequest import ChatRequest
 from dto.response.BaseResponse import BaseResponse
-from service.chatbotService import generate, testRetriever
 from exception.APIException import APIException
 from exception.ExceptionHandler import api_exception_handler
-
+from service.RetrieverService import build, split
 app = FastAPI()
 app.add_exception_handler(APIException, api_exception_handler)
 
@@ -13,25 +11,24 @@ app.add_exception_handler(APIException, api_exception_handler)
 def health():
     return True
 
-@app.post("/chat",
+@app.get("/build",
           response_model=BaseResponse)
-def chat(request: ChatRequest):
+def building():
     try:
         return BaseResponse(
             message="success",
-            data={"answer" : generate(request.prompt)}
+            data={"answer" : build()}
         )
     except Exception as e:
         raise APIException.from_exception(e)
 
-
-@app.post("/rtest",
-         response_model=BaseResponse)
-def chat(request: ChatRequest):
+@app.get("/split")
+def splitting():
     try:
         return BaseResponse(
             message="success",
-            data={"answer" : testRetriever(request.prompt)}
+            data={"answer": split()}
         )
     except Exception as e:
         raise APIException.from_exception(e)
+
