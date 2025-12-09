@@ -4,9 +4,3 @@ class TestService:
 
     def logging(self, log):
         print(log)
-
-    def logging2(self, log):
-        print(log)
-
-    def logging3(self, log):
-        print(log)
